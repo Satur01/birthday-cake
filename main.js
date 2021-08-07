@@ -33,38 +33,60 @@ const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/static/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
-let cake = new THREE.Object3D();
+let cake = new THREE.Group();
+let text = new THREE.Group();
 
 gltfLoader.load(
     '/static/models/cake/gltf-DRACO/cake.gltf',
     (gltf) =>
     {
-        console.log(gltf);
         cake = gltf.scene;   
         scene.add(cake);
+    }
+)
+
+gltfLoader.load(
+    '/static/models/text/gltf-DRACO/text.gltf',
+    (gltf) =>
+    {
+        text = gltf.scene;  
+
+        text.traverse((child)=>{
+            if(child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+                child.material = new THREE.MeshPhongMaterial({color: 0x540851});
+            }
+        });
+        text.position.y = 0.12;
+        text.scale.set(0.08, 0.08, 0.08);
+        text.name = "Text"
+        scene.add(text);
     }
 )
 
 // Lights
 const dLight = new THREE.DirectionalLight('#ffffff', 1.5);
 const dLight2 = new THREE.DirectionalLight('#ffffff', 1.5);
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+hemiLight.color.setHSL( 0.6, 1, 0.6 );
+hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+hemiLight.position.set( 0, 50, 0 );
 dLight.position.set(1.3, 3.0, 0.0);
 dLight2.position.set(-1.3, 3.0, 0.0);
-scene.add(dLight, dLight2);
+scene.add(dLight, dLight2, hemiLight);
 
 window.addEventListener('resize', () =>
 {
     // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
 
     // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
 
     // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 })
 
 /**
@@ -73,10 +95,10 @@ window.addEventListener('resize', () =>
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     antialias: true
-})
+});
 
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  * Animate
@@ -85,6 +107,9 @@ const tick = () =>
 {
     // Update controls
     controls.update();
+
+    cake.rotation.y = cake.rotation.y + 0.005
+    text.rotation.z = text.rotation.z + 0.005
 
     // Render
     renderer.render(scene, camera);
