@@ -31,14 +31,14 @@ controls.enableDamping = true
 // Birthday Cake
 const gltfLoader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath('/static/draco/');
+dracoLoader.setDecoderPath('/birthday-cake/dist/static/draco/');
 gltfLoader.setDRACOLoader(dracoLoader);
 
 let cake = new THREE.Group();
 let text = new THREE.Group();
 
 gltfLoader.load(
-    '/static/models/cake/gltf-DRACO/cake.gltf',
+    '/birthday-cake/dist/static/models/cake/gltf-DRACO/cake.gltf',
     (gltf) => {
         cake = gltf.scene;
         scene.add(cake);
@@ -49,7 +49,7 @@ gltfLoader.load(
 )
 
 gltfLoader.load(
-    '/static/models/text/gltf-DRACO/text.gltf',
+    '/birthday-cake/dist/static/models/text/gltf-DRACO/text.gltf',
     (gltf) => {
         text = gltf.scene;
 
