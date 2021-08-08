@@ -10,6 +10,7 @@
     "vite": "^2.4.4"
   },
   "dependencies": {
+    "canvas-confetti": "^1.4.0",
     "gsap": "^3.7.1",
     "three": "^0.131.3"
   }
